@@ -142,7 +142,7 @@ function bid(const auction_id : auctionId; var s : storage) : return is
 
     const diff : int = auction.bid_timeout / 2;
 
-    const timeout : int = auction.bid_timeout - int(Bitwise.shift_right(abs(diff), bid_count));;
+    const timeout : int = auction.bid_timeout - int(Bitwise.shift_right(abs(diff), bid_count));
 
     closingTime := Tezos.now + timeout;
 
@@ -184,16 +184,23 @@ function sweepBalance(var s : storage) : return is
 
         const succeded : bool = auction.bank >= auction.min_bank;
         
+        var bank : tez := auction.bank;
+
+        if succeded then bank := bank - (bank / 100n) * s.housePercent else skip;
+
         var share : tez := 0tz;
-        const leader_share : tez = auction.bank / 100n * auction.leader_percent;
+
+        const leader_share : tez = bank / 100n * auction.leader_percent;
 
         (* owner withdraw only when auction succeded *)
         if auction.owner = claimer then block {
-            if not succeded then skip else failwith("AUCTION_FAILED");
+            if succeded then skip 
+            else failwith("AUCTION_FAILED");
 
-            if bal > 0tz then failwith("ALREADY_WITHDRAWN") else skip;
+            if bal > 0tz then failwith("ALREADY_WITHDRAWN")
+            else skip;
             
-            share := auction.bank - leader_share;
+            share := bank - leader_share;
 
             s.bidders[(auction_id, claimer)] := share;
         } 
