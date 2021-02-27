@@ -142,9 +142,7 @@ function bid(const auction_id : auctionId; var s : storage) : return is
 
     const diff : int = auction.bid_timeout / 2;
 
-    const div : int =  Bitwise.shift_right(abs(diff), bid_count);
-
-    const timeout : int = auction.bid_timeout - diff;
+    const timeout : int = auction.bid_timeout - int(Bitwise.shift_right(abs(diff), bid_count));;
 
     closingTime := Tezos.now + timeout;
 
