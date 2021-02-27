@@ -186,7 +186,10 @@ function sweepBalance(var s : storage) : return is
         
         var bank : tez := auction.bank;
 
-        if succeded then bank := bank - (bank / 100n) * s.housePercent else skip;
+        if succeded then block {
+          s.houseBank := (bank / 100n) * housePercent;
+          bank := bank - s.houseBank;
+        } else skip;
 
         var share : tez := 0tz;
 
