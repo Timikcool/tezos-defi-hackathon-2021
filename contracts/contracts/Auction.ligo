@@ -140,13 +140,18 @@ function bid(const auction_id : auctionId; var s : storage) : return is
 
     const bid_count : nat = bank / auction.bid_size;
 
-    const timeout : int = auction.bid_timeout - (auction.bid_timeout / (4 / int(bid_count)));
+    const diff : int = auction.bid_timeout / 2;
+
+    const div : int =  Bitwise.shift_right(abs(diff), bid_count);
+
+    const timeout : int = auction.bid_timeout - diff;
 
     closingTime := Tezos.now + timeout;
 
     patch auction with record [
         leader = bidder;
         bank = bank;
+        bid_timeout = timeout;
         closes_at = closingTime;
     ];
 

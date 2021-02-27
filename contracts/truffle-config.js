@@ -5,7 +5,7 @@ module.exports = {
   // for more details on how to specify configuration options!
   networks: {
     development: {
-      host: "https://delphinet.smartpy.io",
+      host: "https://edonet.smartpy.io",
       port: 443,
       network_id: "*",
       type: "tezos",
