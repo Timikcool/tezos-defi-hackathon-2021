@@ -25,6 +25,8 @@ type auction is record [
   bid_timeout : int; // Начальное значение таймаута ставки, задается оунером
   opens_at   : timestamp;
   closes_at  : timestamp;
+  name :     string;
+  description : string;
 ]
 
 type auctionStarter is record [
@@ -35,6 +37,8 @@ type auctionStarter is record [
   bid_size       : tez; // Фиксированный размер ставки, задается оунером
   bid_timeout   : int; // Начальное значение таймаута ставки, задается оунером
   opens_at     : timestamp;
+  name :     string;
+  description: string;
 ]
 
 const housePercent : nat = 1n
@@ -114,6 +118,8 @@ function startAuction(const a : auctionStarter; var s : storage) : return is
       bid_timeout = a.bid_timeout;
       opens_at = a.opens_at;
       closes_at = a.opens_at + a.bid_timeout;
+      name = a.name;
+      description = a.description;
     ];
     s.nextId := s.nextId + 1n;
 
